@@ -1,17 +1,16 @@
-from dotenv import load_dotenv 
 import os
 from openai import OpenAI
 import logging
 from .constants import OPENAI_MODEL
 
-load_dotenv()
-API_KEY = os.getenv("OPENAI_API_KEY")
-
-
 class LLM:
-
     def __init__(self):
-        self.openai = OpenAI(api_key=API_KEY)
+        api_key = os.getenv("OPENAI_API_KEY")  # Use GitHub secret
+
+        if not api_key:
+            raise ValueError("API Key is missing! Set OPENAI_API_KEY as an environment variable.")
+        
+        self.openai = OpenAI(api_key=api_key)
 
     @staticmethod
     def prompt_generator(instructions: str, email_content: str, example: str, role: str) -> str:

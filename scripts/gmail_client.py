@@ -37,10 +37,10 @@ class GmailClient:
         return build("gmail", "v1", credentials=creds)
     
 
-    def get_last_run_time(self) -> datetime:
+    def get_last_run_time(self, date = datetime.now()) -> datetime:
         """Gets the last run time from file or returns a default time."""
 
-        return datetime.now() - timedelta(days=7)  # Default to 7 days ago if no last run
+        return date - timedelta(days=7)  # Default to 7 days ago if no last run
     
 
     def build_query(self) -> str:

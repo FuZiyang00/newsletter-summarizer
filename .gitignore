@@ -4,3 +4,5 @@ notebook/
 # Ignore all JSON files
 *.json
 __pycache__/
+
+.pylintrc

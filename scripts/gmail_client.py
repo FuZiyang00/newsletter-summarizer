@@ -1,3 +1,16 @@
+"""
+Gmail Client Module
+This module provides functionality to interact with the Gmail API.
+It allows fetching unread emails, extracting their content,
+and marking them as read.
+"""
+
+import os
+from datetime import datetime, timedelta
+import base64
+import logging
+
+from typing import List, Dict, Any
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -9,18 +22,16 @@ from .constants import (
     TOKEN_FILE, 
     CREDENTIALS_FILE)
 
-import os
-from datetime import datetime, timedelta
-import base64
-import logging
-from typing import List, Dict, Any
-
 class GmailClient:
+    """
+    A class to interact with the Gmail API for fetching and processing emails.
+    """
 
     def __init__(self):
         self.service = self.get_gmail_client()
 
-    def get_gmail_client(self) -> Resource:
+    @staticmethod
+    def get_gmail_client() -> Resource:
         """Creates and returns a Gmail client."""
 
         creds = None
@@ -36,8 +47,8 @@ class GmailClient:
                 token.write(creds.to_json())
         return build("gmail", "v1", credentials=creds)
     
-
-    def get_last_run_time(self, date = datetime.now()) -> datetime:
+    @staticmethod
+    def get_last_run_time(date = datetime.now()) -> datetime:
         """Gets the last run time from file or returns a default time."""
 
         return date - timedelta(days=7)  # Default to 7 days ago if no last run
@@ -52,14 +63,16 @@ class GmailClient:
     @staticmethod
     def extract_email_body(email_data: dict) -> str:
         """Extracts the plain text body from the email data."""
+
         try:
             parts = email_data.get("payload", {}).get("parts", [])
             for part in parts:
                 if part.get("mimeType") == "text/plain":
                     return base64.urlsafe_b64decode(part["body"]["data"]).decode("utf-8")
             return "No plain text body found"
-        except Exception as e:
-            logging.error(f"Error extracting email body: {e}")
+
+        except Exception as decode_error:
+            logging.error("Error extracting email body: %s", decode_error)
             return "Error reading email body"
     
 
@@ -75,11 +88,14 @@ class GmailClient:
             # Step 2: Fetch details for each email
             for message in messages:
                 email_id = message["id"]
-                email_data = gmail.users().messages().get(userId="me", id=email_id, format="full").execute()
+                email_data = gmail.users().messages().get(userId="me", id=email_id, 
+                                                          format="full").execute()
 
                 # Step 3: Extract sender and content
                 headers = email_data.get("payload", {}).get("headers", [])
-                sender = next((h["value"] for h in headers if h["name"] == "From"), "Unknown Sender")
+                sender = next((h["value"] for h in headers if h["name"] == "From"), 
+                              "Unknown Sender")
+
                 body = self.extract_email_body(email_data)
 
                 emails_data.append({"id": email_id, "sender": sender, "body": body})
@@ -87,7 +103,7 @@ class GmailClient:
             return emails_data
 
         except HttpError as error:
-            logging.error(f"Failed to fetch email details: {error}")
+            logging.error("Failed to fetch email details: %s", error)
             return []
     
     @staticmethod
@@ -101,4 +117,4 @@ class GmailClient:
             ).execute()
             print(f"Marked email {email_id} as read.")
         except HttpError as error:
-            logging.error(f"Failed to mark email as read: {error}")
+            logging.error("Failed to mark email as read: %s", error)

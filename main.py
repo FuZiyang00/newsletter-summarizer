@@ -1,7 +1,7 @@
 from scripts.constants import EMAIL_LIMIT, DISPLAY_SPEED
 from scripts.utils import progressive_print
 from scripts.gmail_client import GmailClient
-from pipelines.gmail_client_pipeline import Gmail_pipeline
+from pipelines.gmail_client_pipeline import gmail_pipeline
 from pipelines.llm_response_pipeline import LLM_pipeline
 import multiprocessing
 
@@ -13,7 +13,7 @@ def summarize_email(body, queue):
 
 def main(): 
     # Fetching emails from Gmail
-    responses_dictionary, gmail_client = Gmail_pipeline()
+    responses_dictionary, gmail_client = gmail_pipeline()
 
     for i in range(EMAIL_LIMIT):
 

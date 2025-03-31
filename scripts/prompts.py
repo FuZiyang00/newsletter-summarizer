@@ -1,7 +1,6 @@
-
-####################################################################################################
+"""
 # Prompt, Role and Example for restructuring the email content
-####################################################################################################
+"""
 
 # instruction 
 RESTRUCTURE_INSTRUCTIONS = """ 
@@ -90,10 +89,9 @@ Processed Email Content:
 
 RESTRUCTURE_EXAMPLE = RAW_EMAIL + PROCESSED_EMAIL 
 
-
-####################################################################################################
-# Prompt, Role and Example for summarizing the email content
-####################################################################################################
+"""
+Prompt, Role and Example for summarizing the email content
+"""
 
 # role
 SUMMARY_ROLE = """

@@ -13,7 +13,7 @@ lint:
 
 # Run unit tests
 test:
-	python -m unittest tests.test_gmail_client
+	python -m unittest discover -s tests
 
 run:
 	python main.py

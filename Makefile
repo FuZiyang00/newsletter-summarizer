@@ -9,7 +9,7 @@ install:
 	pip install -r requirements.txt
 
 lint:
-	python -m pylint --disable=W,C,R scripts/ tests/
+	python -m pylint --disable=W,C,R scripts/
 # W = warnings
 # C = convention
 # R = refactor

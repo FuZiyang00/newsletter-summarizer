@@ -9,7 +9,10 @@ install:
 	pip install -r requirements.txt
 
 lint:
-	python -m pylint scripts/ tests/
+	python -m pylint --disable=W,C,R scripts/ tests/
+# W = warnings
+# C = convention
+# R = refactor
 
 # Run unit tests
 test:

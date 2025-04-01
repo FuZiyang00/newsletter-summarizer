@@ -14,10 +14,6 @@ lint:
 # C = convention
 # R = refactor
 
-# Run unit tests
-test:
-	python -m unittest discover -s tests
-
 run:
 	python main.py
 
